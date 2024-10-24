@@ -1,0 +1,277 @@
+import React, { useState } from 'react';
+import { Home, BookOpen, Users, MessageSquare, Star, ChevronRight, Camera } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+
+const StudyGroupApp = () => {
+  const [currentTab, setCurrentTab] = useState('home');
+  const [selectedPlan, setSelectedPlan] = useState(null);
+  const [selectedDay, setSelectedDay] = useState(null);
+
+  const subjects = [
+    { id: 1, name: 'Matematika', background: 'bg-emerald-100', image: '/api/placeholder/400/200', formula: 'sin²θ + cos²θ = 1' },
+    { id: 2, name: 'Kimia', background: 'bg-blue-100', image: '/api/placeholder/400/200', formula: 'H₂O + CO₂' },
+    { id: 3, name: 'Fisika', background: 'bg-purple-100', image: '/api/placeholder/400/200', formula: 'E = mc²' },
+    { id: 4, name: 'Biologi', background: 'bg-green-100', image: '/api/placeholder/400/200', formula: 'DNA → RNA → Protein' },
+    { id: 5, name: 'B. Indonesia', background: 'bg-yellow-100', image: '/api/placeholder/400/200' },
+    { id: 6, name: 'Sejarah', background: 'bg-red-100', image: '/api/placeholder/400/200' }
+  ];
+
+  const GroupHeader = () => (
+    <div className="bg-emerald-500 p-4 rounded-b-2xl">
+      <div className="flex items-center gap-3 mb-4">
+        <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center">
+          <img src="/api/placeholder/48/48" alt="Group" className="rounded-full" />
+        </div>
+        <div className="text-white">
+          <h2 className="font-bold">MyGroup</h2>
+          <p className="text-sm opacity-90">you, mentor, mate 1, mate 2, mate 3, ...</p>
+        </div>
+      </div>
+    </div>
+  );
+
+  const ChatMessage = ({ sender, message, isGroup, image }) => (
+    <div className={`flex gap-2 mb-4 ${sender === 'Mentor' ? 'justify-start' : 'justify-end'}`}>
+      {sender === 'Mentor' && (
+        <div className="w-8 h-8 rounded-full overflow-hidden">
+          <img src="/api/placeholder/32/32" alt={sender} className="w-full h-full object-cover" />
+        </div>
+      )}
+      <div className={`max-w-[80%] rounded-lg p-3 ${sender === 'Mentor' ? 'bg-emerald-100' : 'bg-gray-100'}`}>
+        {isGroup && <div className="text-xs font-bold mb-1">{sender}</div>}
+        <p className="text-sm">{message}</p>
+        {image && (
+          <div className="mt-2">
+            <img src={image} alt="Shared content" className="rounded-lg w-full" />
+          </div>
+        )}
+      </div>
+    </div>
+  );
+
+  const GroupChat = () => (
+    <div className="flex flex-col h-full">
+      <GroupHeader />
+      <div className="flex-1 p-4 overflow-y-auto">
+        <ChatMessage sender="Mentor" message="Ada soal yang lagi rame guys, bahas yok" isGroup={true} />
+        <ChatMessage 
+          sender="Mentor" 
+          message="SUN + FUN = SWIM" 
+          image="/api/placeholder/300/100"
+          isGroup={true} 
+        />
+        <ChatMessage sender="Mate 1" message="Ayok kak, aku juga lagi belajar" isGroup={true} />
+        <ChatMessage sender="Mate 3" message="Ayok kak, aku juga lagi belajar" isGroup={true} />
+      </div>
+      <div className="p-4 border-t bg-white">
+        <div className="flex gap-2">
+          <input
+            type="text"
+            placeholder="Ketik pesan..."
+            className="flex-1 p-3 border rounded-lg bg-gray-50"
+          />
+          <button className="p-3 bg-emerald-500 text-white rounded-lg">
+            <Camera size={24} />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
+  const SubjectCard = ({ subject }) => (
+    <Card className="overflow-hidden cursor-pointer hover:shadow-lg transition-shadow">
+      <div className={`relative h-40 ${subject.background}`}>
+        <img 
+          src={subject.image} 
+          alt={subject.name}
+          className="w-full h-full object-cover opacity-50"
+        />
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="text-center">
+            <h3 className="text-2xl font-bold">{subject.name}</h3>
+            {subject.formula && (
+              <p className="mt-2 text-sm opacity-75">{subject.formula}</p>
+            )}
+          </div>
+        </div>
+      </div>
+    </Card>
+  );
+
+  const SubjectGrid = () => (
+    <div className="p-4">
+      <div className="flex gap-2 mb-4 overflow-x-auto">
+        <button className="px-4 py-2 bg-emerald-500 text-white rounded-full whitespace-nowrap">SMP</button>
+        <button className="px-4 py-2 bg-gray-200 rounded-full whitespace-nowrap">3 SMP</button>
+        <button className="px-4 py-2 bg-gray-200 rounded-full whitespace-nowrap">1 SMA</button>
+        <button className="px-4 py-2 bg-gray-200 rounded-full whitespace-nowrap">2 SMA</button>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {subjects.map(subject => (
+          <SubjectCard key={subject.id} subject={subject} />
+        ))}
+      </div>
+    </div>
+  );
+
+  const PlanSelection = () => (
+    <div className="p-4">
+      <div className="mb-6">
+        <img src="/api/placeholder/400/200" alt="Study Group" className="w-full rounded-xl mb-4" />
+        <h2 className="text-2xl font-bold mb-2">Program 3 Bulan</h2>
+        <ul className="space-y-3">
+          <li className="flex items-center gap-2">
+            <div className="w-2 h-2 bg-emerald-500 rounded-full" />
+            Belajar bareng dan akses seluruh konten StudyGroup selama 3 bulan.
+          </li>
+          <li className="flex items-center gap-2">
+            <div className="w-2 h-2 bg-emerald-500 rounded-full" />
+            Pertemuan satu kali per minggu bersama mentor.
+          </li>
+          <li className="flex items-center gap-2">
+            <div className="w-2 h-2 bg-emerald-500 rounded-full" />
+            Nikmati diskusi bareng teman grup dan mentormu di StudyGroup!
+          </li>
+        </ul>
+      </div>
+
+      <Card className="mb-4">
+        <CardContent className="p-6">
+          <h3 className="font-semibold mb-4">Pilih hari untuk pertemuanmu</h3>
+          <div className="grid grid-cols-3 gap-2">
+            {['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'].map(day => (
+              <button
+                key={day}
+                onClick={() => setSelectedDay(day)}
+                className={`p-3 rounded-lg text-sm ${
+                  selectedDay === day 
+                    ? 'bg-emerald-500 text-white' 
+                    : 'bg-gray-100 hover:bg-gray-200'
+                }`}
+              >
+                {day}
+              </button>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card className="mb-6">
+        <CardContent className="p-6">
+          <h3 className="font-semibold mb-4">Pembayaran Full/Cicilan</h3>
+          <div className="space-y-3">
+            <button
+              onClick={() => setSelectedPlan('full')}
+              className={`w-full p-4 rounded-lg text-left ${
+                selectedPlan === 'full' 
+                  ? 'bg-emerald-500 text-white' 
+                  : 'bg-gray-100 hover:bg-gray-200'
+              }`}
+            >
+              <div className="font-medium">Full</div>
+              <div className="text-sm opacity-75">Rp150.000</div>
+            </button>
+            <button
+              onClick={() => setSelectedPlan('cicilan')}
+              className={`w-full p-4 rounded-lg text-left ${
+                selectedPlan === 'cicilan' 
+                  ? 'bg-emerald-500 text-white' 
+                  : 'bg-gray-100 hover:bg-gray-200'
+              }`}
+            >
+              <div className="font-medium">Cicilan</div>
+              <div className="text-sm opacity-75">Rp50.000/bulan</div>
+            </button>
+          </div>
+        </CardContent>
+      </Card>
+
+      <div className="flex items-center gap-4 p-4 bg-white border-t fixed bottom-0 left-0 right-0">
+        <div>
+          <div className="text-sm">Total Pembayaran</div>
+          <div className="font-bold">Rp50.000</div>
+        </div>
+        <button className="flex-1 p-3 bg-emerald-500 text-white rounded-lg font-medium">
+          Bayar Sekarang
+        </button>
+      </div>
+    </div>
+  );
+
+  const renderContent = () => {
+    switch (currentTab) {
+      case 'chat':
+        return <GroupChat />;
+      case 'subjects':
+        return <SubjectGrid />;
+      case 'plans':
+        return <PlanSelection />;
+      default:
+        return (
+          <div className="p-4">
+            <div className="relative h-48 mb-6 rounded-xl overflow-hidden">
+              <img 
+                src="/api/placeholder/800/400" 
+                alt="Welcome" 
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/50 flex items-end p-6">
+                <div className="text-white">
+                  <h1 className="text-2xl font-bold mb-2">Study Group</h1>
+                  <p>Find your study mates</p>
+                </div>
+              </div>
+            </div>
+            <SubjectGrid />
+          </div>
+        );
+    }
+  };
+
+  return (
+    <div className="h-screen flex flex-col bg-gray-50">
+      {currentTab !== 'chat' && (
+        <header className="bg-emerald-500 text-white p-4">
+          <h1 className="text-xl font-bold">StudyGroup</h1>
+        </header>
+      )}
+
+      <main className="flex-1 overflow-y-auto pb-20">
+        {renderContent()}
+      </main>
+
+      <nav className="bg-white border-t flex justify-around p-4 fixed bottom-0 left-0 right-0">
+        <button
+          onClick={() => setCurrentTab('home')}
+          className={`flex flex-col items-center ${currentTab === 'home' ? 'text-emerald-500' : 'text-gray-500'}`}
+        >
+          <Home size={24} />
+          <span className="text-xs">Home</span>
+        </button>
+        <button
+          onClick={() => setCurrentTab('subjects')}
+          className={`flex flex-col items-center ${currentTab === 'subjects' ? 'text-emerald-500' : 'text-gray-500'}`}
+        >
+          <BookOpen size={24} />
+          <span className="text-xs">Materi</span>
+        </button>
+        <button
+          onClick={() => setCurrentTab('chat')}
+          className={`flex flex-col items-center ${currentTab === 'chat' ? 'text-emerald-500' : 'text-gray-500'}`}
+        >
+          <MessageSquare size={24} />
+          <span className="text-xs">Chat</span>
+        </button>
+        <button
+          onClick={() => setCurrentTab('plans')}
+          className={`flex flex-col items-center ${currentTab === 'plans' ? 'text-emerald-500' : 'text-gray-500'}`}
+        >
+          <Star size={24} />
+          <span className="text-xs">Program</span>
+        </button>
+      </nav>
+    </div>
+  );
+};
+
+export default StudyGroupApp;
